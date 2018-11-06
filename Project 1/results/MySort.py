@@ -3,9 +3,9 @@ Math 590
 Project 1
 Fall 2018
 
-Partner 1: Zhuojun Huang zh89
-Partner 2: Wenhui Guo wg72
-Date: 10/28/2018
+Partner 1:
+Partner 2:
+Date:
 """
 
 # Import time, random, plotting, stats, and numpy.
@@ -20,117 +20,77 @@ import math
 SelectionSort
 """
 def SelectionSort(A):
- for i in range(len(A)):      #Loop through the array
-       index=i                #sorted part index
-       for j in range(i+1,len(A)):    #iterativly go through unsorted part
-           if A[index]>A[j]:      
-               index=j    #found the element less than sorted, 
-                          #\put it in the sorted part
-       A[i],A[index]=A[index],A[i]
- return A
+    return A
 
 """
 InsertionSort
 """
 def InsertionSort(A):
- for i in range(1,len(A)):     #go through the array
-        current = A[i]         #sorted part
-        for j in range(i-1, -2, -1):    #iterativly go through unsorted part
-            if(j == -1 or A[j] <= current): break
-            else:
-                A[j+1] = A[j]    #swoop over
-        A[j+1] = current         #store in sorted part
- return A
+    return A
 
 """
 BubbleSort
+
+This function will take in an array of elements and sort the array using
+Bubble Sort.
+
+INPUTS
+A: an array
+
+OUTPUTS
+A: an sorted array
 """
 def BubbleSort(A):
- for i in range(0,len(A)):    
-        for j in range(i+1,len(A)):   
-            if A[i]>A[j]:           #if first element bigger than latter element
-                A[i],A[j]=A[j],A[i]    #swap
- return A
-'''
-MergeSort Helper function
-To combine two sorted array together
-'''
-
-def CombineTwoSortedArray(A1, A2, A):
-    k = 0
-    i = 0
-    j = 0
-    while (i < len(A1) and j < len(A2)): #compare for the smaller one to add in A
-        if(A1[i] <= A2[j]):
-            A[k] = A1[i]
-            i += 1
-        elif(A2[j] < A1[i]):
-            A[k] = A2[j]
-            j += 1
-        k += 1
-
-    if(j < len(A2)):   #if all elements in A1 have all in A, 
-                       #\put the rest of A2 in A
-        A[k:] = A2[j:]
-    if(i < len(A1)):   #vice versa
-        A[k:] = A1[i:]
+    for i in range(0, len(A)):
+        for j in range(i, len(A)):
+            if A[i] > A[j] :
+                A[i], A[j] = A[j], A[i]
     return A
+
 """
 MergeSort
-
-Recursion:
-base case:
-if length of A==1 or length of A==2
-
-each time n->2*(n/2) plus merge two sorted together
 """
 def MergeSort(A):
-    if len(A) <= 1:   #base case 1
+    if(len(A) <= 1):
         return A
-    elif len(A) == 2:  #base case 2
-        if A[0] > A[1]:
-            A[0], A[1] = A[1], A[0]
-        return A
+    A1 = MergeSort(A[0:int(math.floor(len(A)/2))]) #floor
+    A2 = MergeSort(A[int(math.floor(len(A)/2)):])
+    i = 0
+    j = 0
+    count = 0
+    while (i < len(A1) and j < len(A2)):
+        if (A1[i] > A2[j]):
+            A[count] = A2[j]
+            count += 1  #count++
+            j += 1
+        else:
+            A[count] = A1[i]
+            count += 1
+            i += 1
+    if (i == len(A1)):
+        A[count:] = A2[j:]  #append list
     else:
-        middle = math.floor(len(A) / 2)  
-        A1 = MergeSort(A[0: middle])     #recursive call
-        A2 = MergeSort(A[middle: len(A)])
-        CombineTwoSortedArray(A1, A2, A)  #combine two sorted part together
-        return A
-
+        A[count:] = A1[i:]
+    return A
 
 """
 QuickSort
 
 Sort a list A with the call QuickSort(A, 0, len(A)).
-
-base case: 
-if length==1, issorted
-
-an array A in range [i, j)
-pivotIndex, pivotValue
-reorganize array A, so that we find the place of the pivotValue, 
-i.e every left element of the pivotValue is smaller, right larger
 """
 def QuickSort(A, i, j):
-    if ((j - i) <= 1): return A    #base case
-
-    pivot = A[i]   
+    if (i >= j - 1): return A
+    pivot = A[i]
     left = i + 1
     right = j - 1
-
     while (left <= right):
-        while (left <= right and A[left] <= pivot): left += 1 
-        #left part: all smaller than or equal to pivotValue, move to the right
-        while (A[right] > pivot): right -= 1
-        #right part: all bigger than pivotValue, move to the left
-        if (left < right):    
-            A[left], A[right] = A[right], A[left]  #swap 
-              #\since at this time A[left] bigger than pivot 
-              #\while A[right] smaller or equal to pivot
-    A[i], A[left - 1] = A[left - 1], A[i]  #place pivot in the right place
-    QuickSort(A, i, left - 1)  #recursive call
-    QuickSort(A, left, j)
+        while (left <= right and A[left] <= pivot): left+= 1
+        while (A[right] >  pivot): right -= 1
+        if (left < right):
+            A[left], A[right] = A[right], A[left]
+    A[i], A[left - 1] = A[left - 1], A[i]
+    QuickSort(A, i, left - 1)
+    QuickSort(A, left, j)    
     return A
 
 """
@@ -248,9 +208,6 @@ def testingSuite(alg):
             eval('%s(tests[tInd])' % alg) if alg != 'QuickSort' \
             else eval('%s(tests[tInd],0,len(tests[tInd]))' % alg)
             
-            print("-----------sorted----------")
-            print(tests[tInd])
-
             # Check if the test succeeded.
             if isSorted(temp, tests[tInd]):
                 print('Test %d Success: %s' % (tInd+1, message[tInd]))
@@ -485,9 +442,11 @@ def measureTime(sortedFlag = False, numTrials = 30):
     # Close all figures.
     plt.close('all')
 
-
 def main():
-    measureTime()
-    testingSuite('InsertionSort')
+    test = [5,4,3,2,1]
+    MergeSort(test)
+    print(test)
+    # measureTime()
+
 if __name__ == '__main__':
     main()
