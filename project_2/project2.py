@@ -10,6 +10,126 @@ Date: Nov.06 2018
 
 # Import math.
 import math
+import copy
+
+
+################################################################################
+
+"""
+clear function
+
+INPUTS
+maze: A Maze object representing the maze.
+
+OUTPUTS
+path: The shortest path from maze.start to maze.exit.
+"""
+def clear(maze):
+    #maze = copy.deepcopy(maze)
+    ls = maze.adjList
+    for v in ls:
+        v.visited = False
+        v.prev = None
+
+################################################################################
+
+
+
+################################################################################
+
+"""
+DFS function
+
+INPUTS
+maze: A Maze object representing the maze.
+
+OUTPUTS
+path: The shortest path from maze.start to maze.exit.
+"""
+def dfs(maze):
+    #maze = copy.deepcopy(maze)
+    start = maze.start
+    end = maze.exit
+    adjList = maze.adjList
+    s = Stack()
+    s.push(start)
+    
+    while (not s.isEmpty()):
+        top = s.pop()
+        top.visited = True
+        neighs = top.neigh
+        #add
+        for n in neighs:
+            if (n.visited):
+                continue
+            n.prev = top
+            if (not n.isEqual(end)):
+                s.push(n)
+            #find a path to exit
+            else :
+                res = []
+                while (not n.isEqual(start)):
+                    res = [n.rank] + res
+                    n = n.prev
+                res = [start.rank] + res
+                clear(maze)
+                return res
+
+
+
+    clear(maze)
+    raise Exception("No path out of Maze")
+
+################################################################################
+
+
+################################################################################
+
+"""
+BFS function
+
+INPUTS
+maze: A Maze object representing the maze.
+
+OUTPUTS
+path: The shortest path from maze.start to maze.exit.
+"""
+def bfs(maze):
+    #maze = copy.deepcopy(maze)
+    start = maze.start
+    end = maze.exit
+    adjList = maze.adjList
+    q = Queue(1000)
+    q.push(start)
+    while (not q.isEmpty()):
+        top = q.pop()
+        top.visited = True
+        neighs = top.neigh
+        #add
+        for n in neighs:
+            if (n.visited):
+                print(n)
+                continue
+            n.prev = top
+            if (not n.isEqual(end)):
+                q.push(n)
+            #find a path to exit
+            else :
+                res = []
+                while (not n.isEqual(start)):
+                    res = [n.rank] + res
+                    n = n.prev
+                res = [start.rank] + res
+                clear(maze)
+                return res
+
+
+
+    clear(maze)
+    raise Exception("No path out of Maze")
+
+################################################################################
+
 
 ################################################################################
 
@@ -27,9 +147,12 @@ def bdfs(maze, alg):
     # If the alg is not BFS or DFS, raise exception.
     if (alg != 'BFS') and (alg != 'DFS'):
         raise Exception('Incorrect alg! Need BFS or DFS!')
-
+    if (alg == 'BFS'):
+        res = bfs(maze)
+    else:
+        res = dfs(maze)
     ##### Your implementation goes here. #####
-    return []
+    return res
     ##### Your implementation goes here. #####
 
 ################################################################################
@@ -96,14 +219,28 @@ class Stack:
     """
     def push(self, val):
         ##### IMPLEMENT! #####
-        return
+        if (self.numElems == len(self.stack)):
+            print("the stack is full!")
+            return
 
+        self.top += 1
+        self.numElems += 1
+        self.stack[self.top] = val
+        return
     """
     pop function to pop the value off the top of the stack.
     """
     def pop(self):
         ##### IMPLEMENT! #####
-        return None
+        if self.numElems == 0:
+            print("The stack is empty!")
+            return None
+        
+        temp = self.stack[self.top]
+        self.top -= 1
+        self.numElems -= 1
+        return temp
+        
 
 ################################################################################
 
@@ -181,6 +318,13 @@ class Queue:
     """
     def push(self, val):
         ##### IMPLEMENT! #####
+        if (self.isFull()):
+            print("The queue is full, cannot add more!")
+            return
+
+        self.queue[self.rear] = val
+        self.rear += 1
+        self.numElems += 1
         return
 
     """
@@ -188,7 +332,14 @@ class Queue:
     """
     def pop(self):
         ##### IMPLEMENT! #####
-        return None
+        if (self.isEmpty()):
+            print("The queue is empty, cannot pop!")
+            return None
+
+        temp = self.queue[self.front]
+        self.front += 1
+        self.numElems -= 1
+        return temp
 
 ################################################################################
 
@@ -582,3 +733,12 @@ def testMazes(verbosity=False):
     return
 
 ################################################################################
+def test():
+    m = Maze(0, False)
+    m.printList()
+
+def main():
+    testMazes(True)
+
+if __name__ == '__main__':
+    main()
