@@ -16,16 +16,15 @@ import copy
 ################################################################################
 
 """
-clear function
+clear function will restore the maze
 
 INPUTS
 maze: A Maze object representing the maze.
 
 OUTPUTS
-path: The shortest path from maze.start to maze.exit.
+None
 """
 def clear(maze):
-    #maze = copy.deepcopy(maze)
     ls = maze.adjList
     for v in ls:
         v.visited = False
@@ -47,7 +46,6 @@ OUTPUTS
 path: The shortest path from maze.start to maze.exit.
 """
 def dfs(maze):
-    #maze = copy.deepcopy(maze)
     start = maze.start
     end = maze.exit
     adjList = maze.adjList
@@ -60,14 +58,16 @@ def dfs(maze):
         neighs = top.neigh
         #add
         for n in neighs:
+            #continus if is visited
             if (n.visited):
                 continue
+            #if not end and not visited
             n.prev = top
             if (not n.isEqual(end)):
                 s.push(n)
             #find a path to exit
             else :
-                res = []
+                res = []s
                 while (not n.isEqual(start)):
                     res = [n.rank] + res
                     n = n.prev
