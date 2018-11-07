@@ -1,0 +1,45 @@
+#include <queue>
+/*
+struct Node {
+  int data;
+  list<Node*> neighbors;
+  Node(int d) : data(d) {}
+};
+*/
+
+Node* clone(Node* root) {
+  //TODO: Write - Your - Code
+  unordered_map<Node *, Node*> m;
+  unordered_set<Node *> visited;
+  queue<Node*> q;
+  q.push(root);
+  m[root] = new Node(root->data);
+  while (!q.empty()) {
+    Node * cur = q.front();
+    q.pop();
+    visited.insert(cur);
+    
+    //iterate through all neighbors of cur
+    list<Node*> tempNeighs;
+    for (Node * n : cur->neighbors) {
+      if(visited.find(n) == visited.end()) {
+        q.push(n);
+      }
+      if (m.find(n) != m.end()) {
+        tempNeighs.push_back(m[n]);
+      }
+      else{
+        //tore
+        Node * t = new Node(n->data);
+        m[n] = t;
+        tempNeighs.push_back(t);
+      }
+    }
+    
+    //construct and store node into hashmap
+    Node * temp = m[cur];
+    temp->neighbors = tempNeighs;
+  }
+  
+   return m[root];
+}
