@@ -3,8 +3,8 @@ Math 590
 Project 2 DFS/BFS
 Fall 2018
 
-Partner 1: Wenhui Guo
-Partner 2: Zhuojun Huang
+Partner 1: Zhuojun Huang
+Partner 2: 
 Date: Nov.06 2018
 """
 
@@ -16,7 +16,7 @@ import copy
 ################################################################################
 
 """
-clear function will restore the maze
+clear function will clean up the maze, reset visited and prev of vertex
 
 INPUTS
 maze: A Maze object representing the maze.
@@ -37,7 +37,7 @@ def clear(maze):
 ################################################################################
 
 """
-DFS function
+DFS function will visit the vertex in an depth first order
 
 INPUTS
 maze: A Maze object representing the maze.
@@ -67,7 +67,7 @@ def dfs(maze):
                 s.push(n)
             #find a path to exit
             else :
-                res = []s
+                res = []
                 while (not n.isEqual(start)):
                     res = [n.rank] + res
                     n = n.prev
@@ -86,7 +86,7 @@ def dfs(maze):
 ################################################################################
 
 """
-BFS function
+BFS function will visit the vertex in a breadth first order
 
 INPUTS
 maze: A Maze object representing the maze.
@@ -738,7 +738,7 @@ def test():
     m.printList()
 
 def main():
-    testMazes(True)
+    testMazes(False)
 
 if __name__ == '__main__':
     main()
