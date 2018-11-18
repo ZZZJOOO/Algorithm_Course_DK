@@ -4,6 +4,8 @@ Project 2 DFS/BFS
 Fall 2018
 
 Partner 1: Zhuojun Huang
+NetID: zh89
+
 Partner 2: 
 Date: Nov.06 2018
 """
@@ -49,6 +51,7 @@ def dfs(maze):
     start = maze.start
     end = maze.exit
     adjList = maze.adjList
+    #use stack to store the following vertices
     s = Stack()
     s.push(start)
     
@@ -99,6 +102,7 @@ def bfs(maze):
     start = maze.start
     end = maze.exit
     adjList = maze.adjList
+    #use queue to store the following vertices
     q = Queue(1000)
     q.push(start)
     while (not q.isEmpty()):
@@ -108,7 +112,6 @@ def bfs(maze):
         #add
         for n in neighs:
             if (n.visited):
-                print(n)
                 continue
             n.prev = top
             if (not n.isEqual(end)):
@@ -219,9 +222,9 @@ class Stack:
     """
     def push(self, val):
         ##### IMPLEMENT! #####
+        #corner case: stack is full
         if (self.numElems == len(self.stack)):
-            print("the stack is full!")
-            return
+            self.resize()
 
         self.top += 1
         self.numElems += 1
@@ -318,9 +321,10 @@ class Queue:
     """
     def push(self, val):
         ##### IMPLEMENT! #####
-        if (self.isFull()):
-            print("The queue is full, cannot add more!")
-            return
+
+        #corner case: queue is full or rear
+        if (self.isFull() or self.rear == self.numElems):
+            self.resize()
 
         self.queue[self.rear] = val
         self.rear += 1
@@ -332,6 +336,8 @@ class Queue:
     """
     def pop(self):
         ##### IMPLEMENT! #####
+
+        #corner case: dequeue an empty queue
         if (self.isEmpty()):
             print("The queue is empty, cannot pop!")
             return None
@@ -738,7 +744,7 @@ def test():
     m.printList()
 
 def main():
-    testMazes(False)
+    testMazes(True)
 
 if __name__ == '__main__':
     main()
