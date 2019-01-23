@@ -3,18 +3,15 @@ Math 590
 Project 3
 Fall 2018
 
-Partner 1:
+Partner 1: zh89
 Partner 2:
-Date:
+Date: 11.18.2018
 """
 
 # Import math.
 import math
 
 ################################################################################
-
-
-
 """
 detectArbitrage
 """
@@ -23,62 +20,53 @@ def detectArbitrage(currencies, tol=1e-15):
     s = currencies.adjList[0]
     s.dist = 0
     s.prev = s
+
     # perform V - 1 iterations of Bellman-Ford Algorithm on currencies object
     for i in range (0, len(currencies.adjList) - 1) :
+        # iterate through every vertex
         for v in currencies.adjList:
+            # iterate through every neighbor of vertex v
             for u in v.neigh:
-                # if u.rank == s.rank:
-                #     continue
                 if u.dist > v.dist + currencies.adjMat[v.rank][u.rank] + tol:
-                    # if (u.rank == 3):
-                    # print("before, %d -> %d is %lf" % (v.rank, u.rank, u.dist))
                     u.dist = v.dist + currencies.adjMat[v.rank][u.rank]
-                    # print("after, %d -> %d is %lf" % (v.rank, u.rank, u.dist))
                     u.prev = v
 
     # perform extra iteration, if the dist change, it is in a negative cycle, mark it
     mark = Vertex(-1)
     for v in currencies.adjList:
         for u in v.neigh:
-            # if u.rank == s.rank:
-            #     continue
             if u.dist > v.dist + currencies.adjMat[v.rank][u.rank] + tol:
-                # print("detected: %d" % u.rank)
-                # print("before, %d -> %d is %lf" % (v.rank, u.rank, u.dist))
                 u.dist = v.dist + currencies.adjMat[v.rank][u.rank]
-                # print("after, %d -> %d is %lf" % (v.rank, u.rank, u.dist))
                 u.prev = v
-                mark = v
+                # u is updated, so it is connected to a negative cycle
+                mark = u
                 break
+        # detect a cycle, break
         if mark.rank != -1:
             break
-        # print("-----------")
 
+    # no negative cycle found
     if mark.rank == -1:
         return []
-    negCyc = []
-    negCyc.append(mark.rank)
-    # print("begin cycle")
-    # print(mark.rank)
     
+    # find a vertex inside a cycle
+    Cyc = []
+    Cyc.append(mark.rank)  
     mark = mark.prev
-    while (mark.rank not in negCyc):
-        negCyc.append(mark.rank)
-        # print(mark.rank)
+    while (mark.rank not in Cyc):
+        Cyc.append(mark.rank)
         mark = mark.prev
     
+    # start vertex is in a cycle
     start = mark
     res = [mark.rank]
     mark = mark.prev
     while mark.rank != start.rank:
+        # [prev] + [following vertices]
         res = [mark.rank] + res
         mark = mark.prev
-    res = [mark.rank] + res
-    
-    # for elem in res:
-    #     print('%d -> ' % elem)
-    # print()
-
+    # add the end vertex to the list
+    res = [start.rank] + res
 
     return res
     ##### Your implementation goes here. #####
